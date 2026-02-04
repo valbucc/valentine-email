@@ -1,38 +1,301 @@
 <!doctype html>
-<html>
-  <body style="margin:0;padding:0;background:#fff5f7;font-family:Arial,Helvetica,sans-serif;">
-    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#fff5f7;padding:24px 0;">
-      <tr>
-        <td align="center">
-          <table role="presentation" width="600" cellspacing="0" cellpadding="0" style="width:600px;max-width:92%;background:#ffffff;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.08);overflow:hidden;">
-            <tr>
-              <td style="padding:26px 22px;text-align:center;">
-                <div style="font-size:28px;line-height:1.2;font-weight:700;color:#1f1f1f;">
-                  Will you be my Valentine? 💘
-                </div>
-                <div style="margin-top:10px;font-size:15px;color:#555;">
-                  I made something interactive for you.
-                </div>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Valentine?</title>
+  <style>
+    :root{
+      --bg1:#fff0f5;
+      --bg2:#ffe2ea;
+      --card:#ffffff;
+      --ink:#1f1f1f;
+      --pink:#ff4d6d;
+      --shadow: 0 18px 55px rgba(0,0,0,.12);
+    }
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      min-height:100vh;
+      display:grid;
+      place-items:center;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:
+        radial-gradient(900px 700px at 15% 15%, var(--bg2), transparent 60%),
+        radial-gradient(900px 700px at 85% 25%, #ffeef2, transparent 58%),
+        linear-gradient(135deg, #fff, var(--bg1));
+      overflow:hidden;
+      padding: 20px;
+    }
 
-                <div style="margin-top:18px;">
-                  <a href="https://valbucc.github.io/valentine-email/landing.html"
-                     style="display:inline-block;background:#ff4d6d;color:#fff;text-decoration:none;padding:12px 18px;border-radius:999px;font-weight:700;">
-                    Open the surprise ✨
-                  </a>
-                </div>
+    .wrap{
+      width:min(720px, 95vw);
+      display:grid;
+      gap:16px;
+      align-items:center;
+      justify-items:center;
+    }
 
-                <div style="margin-top:16px;font-size:12px;color:#888;">
-                  (Opens in your browser)
-                </div>
-              </td>
-            </tr>
-          </table>
-          <div style="font-size:11px;color:#999;margin-top:10px;">
-            Made with 💖
+    .title{
+      text-align:center;
+      color:rgba(0,0,0,.75);
+      font-weight:700;
+      letter-spacing:-0.02em;
+    }
+
+    /* CARD */
+    .card{
+      width:min(560px, 95vw);
+      background:rgba(255,255,255,.92);
+      border:1px solid rgba(0,0,0,.06);
+      border-radius:22px;
+      box-shadow: var(--shadow);
+      padding: 22px;
+      position:relative;
+      backdrop-filter: blur(6px);
+    }
+
+    /* ENVELOPE */
+    .envelope-area{
+      display:grid;
+      place-items:center;
+      margin-top: 6px;
+    }
+    .envelope{
+      width: min(420px, 92%);
+      height: 260px;
+      position:relative;
+      cursor:pointer;
+      user-select:none;
+      transform: translateY(0);
+      transition: transform .18s ease;
+    }
+    .envelope:hover{ transform: translateY(-2px); }
+
+    /* Envelope base */
+    .env-body{
+      position:absolute; inset: 70px 0 0 0;
+      background: #fff;
+      border-radius: 14px;
+      border: 1px solid rgba(0,0,0,.08);
+      box-shadow: 0 16px 40px rgba(0,0,0,.12);
+      overflow:hidden;
+    }
+    /* left/right folds */
+    .fold-left, .fold-right{
+      position:absolute; top: 70px; bottom: 0;
+      width: 50%;
+      background: linear-gradient(135deg, #fff, #fff5f7);
+      border: 1px solid rgba(0,0,0,.06);
+    }
+    .fold-left{
+      left:0;
+      transform: skewX(12deg);
+      transform-origin: left;
+      border-right: none;
+    }
+    .fold-right{
+      right:0;
+      transform: skewX(-12deg);
+      transform-origin: right;
+      border-left: none;
+    }
+
+    /* flap */
+    .flap{
+      position:absolute; left:0; right:0; top:70px;
+      height: 160px;
+      background: linear-gradient(180deg, #fff, #ffe6ed);
+      clip-path: polygon(0 0, 100% 0, 50% 78%);
+      border: 1px solid rgba(0,0,0,.06);
+      border-bottom:none;
+      transform-origin: 50% 0%;
+      transform: rotateX(0deg);
+      transition: transform .45s ease;
+      z-index: 4;
+    }
+
+    /* letter inside */
+    .letter{
+      position:absolute;
+      left: 18px; right: 18px;
+      top: 92px;
+      height: 170px;
+      background: #fff;
+      border-radius: 12px;
+      border: 1px solid rgba(0,0,0,.08);
+      box-shadow: 0 10px 25px rgba(0,0,0,.08);
+      padding: 18px 16px;
+      display:grid;
+      gap:10px;
+      place-content:center;
+      text-align:center;
+      transform: translateY(42px);
+      transition: transform .45s ease;
+      z-index: 3;
+    }
+
+    .seal{
+      position:absolute;
+      top: 160px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 54px; height: 54px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #ff99ad, var(--pink));
+      box-shadow: 0 12px 25px rgba(0,0,0,.18);
+      display:grid;
+      place-items:center;
+      color:white;
+      font-size: 22px;
+      z-index: 5;
+    }
+
+    .q{
+      font-size: 28px;
+      font-weight: 850;
+      letter-spacing:-0.03em;
+      color: var(--ink);
+      margin:0;
+    }
+    .sub{
+      margin:0;
+      color: rgba(0,0,0,.65);
+      font-weight: 600;
+    }
+
+    /* Buttons */
+    .btn-row{
+      margin-top: 8px;
+      position:relative;
+      height: 64px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap: 14px;
+    }
+    button{
+      border:0;
+      cursor:pointer;
+      padding: 12px 18px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 16px;
+      box-shadow: 0 12px 28px rgba(0,0,0,.12);
+      transition: transform .12s ease, opacity .12s ease;
+      user-select:none;
+      position: relative;
+      z-index: 2;
+    }
+    button:active{ transform: scale(.98); }
+
+    #yesBtn{
+      background: linear-gradient(135deg, var(--pink), #ff8fa3);
+      color: #fff;
+    }
+    #noBtn{
+      background: #1f1f1f;
+      color: #fff;
+    }
+
+    .hint{
+      text-align:center;
+      font-size: 12px;
+      opacity:.65;
+      margin-top: 12px;
+    }
+
+    /* Open state */
+    .open .flap{ transform: rotateX(165deg); }
+    .open .letter{ transform: translateY(-10px); }
+
+    .tap{
+      text-align:center;
+      font-size: 13px;
+      opacity:.7;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="title">A small interactive Valentine surprise 💌</div>
+
+    <div class="card">
+      <div class="envelope-area">
+        <div class="envelope" id="envelope" aria-label="Open envelope">
+          <div class="flap"></div>
+          <div class="seal">❤</div>
+
+          <div class="env-body"></div>
+          <div class="fold-left"></div>
+          <div class="fold-right"></div>
+
+          <div class="letter" id="letter">
+            <p class="q">Will you be my Valentine?</p>
+            <p class="sub">Choose wisely 😌</p>
+
+            <div class="btn-row" id="btnRow">
+              <button id="yesBtn" type="button">Yes 💘</button>
+              <button id="noBtn" type="button">No 🙅‍♂️</button>
+            </div>
           </div>
-        </td>
-      </tr>
-    </table>
-  </body>
-</html>
+        </div>
 
+        <div class="tap">Tap the envelope (or just try the buttons).</div>
+        <div class="hint">Tip: the “No” button doesn’t like being clicked.</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const envelope = document.getElementById('envelope');
+    const noBtn = document.getElementById('noBtn');
+    const yesBtn = document.getElementById('yesBtn');
+    const btnRow = document.getElementById('btnRow');
+
+    // Open/close envelope on click (cosmetic)
+    envelope.addEventListener('click', (e) => {
+      // don't toggle when clicking buttons (so it doesn't annoy)
+      if (e.target.tagName.toLowerCase() === 'button') return;
+      envelope.classList.toggle('open');
+    });
+
+    // Make "No" run away within btnRow bounds
+    function moveNoButton(){
+      const rowRect = btnRow.getBoundingClientRect();
+      const btnRect = noBtn.getBoundingClientRect();
+
+      const maxX = Math.max(0, rowRect.width - btnRect.width);
+      const x = Math.random() * maxX;
+      const y = (Math.random() * 18) - 9; // small vertical wiggle
+
+      noBtn.style.position = 'absolute';
+      noBtn.style.left = `${x}px`;
+      noBtn.style.top  = `${y}px`;
+    }
+
+    // Escape on "approach"
+    ['mouseenter','mouseover','pointerenter','focus','touchstart'].forEach(evt => {
+      noBtn.addEventListener(evt, (ev) => {
+        ev.preventDefault();
+        moveNoButton();
+      }, {passive:false});
+    });
+
+    // If clicked somehow, still escape
+    noBtn.addEventListener('click', (ev) => {
+      ev.preventDefault();
+      moveNoButton();
+    });
+
+    // YES -> go to animation page
+    yesBtn.addEventListener('click', () => {
+      window.location.href = './yes.html';
+    });
+
+    // initial dodge for fun
+    setTimeout(moveNoButton, 350);
+  </script>
+</body>
+</html>
