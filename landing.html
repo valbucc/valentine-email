@@ -8,7 +8,6 @@
     :root{
       --bg1:#fff0f5;
       --bg2:#ffe2ea;
-      --card:#ffffff;
       --ink:#1f1f1f;
       --pink:#ff4d6d;
       --shadow: 0 18px 55px rgba(0,0,0,.12);
@@ -31,8 +30,7 @@
     .wrap{
       width:min(720px, 95vw);
       display:grid;
-      gap:16px;
-      align-items:center;
+      gap:14px;
       justify-items:center;
     }
 
@@ -50,104 +48,85 @@
       border-radius:22px;
       box-shadow: var(--shadow);
       padding: 22px;
-      position:relative;
       backdrop-filter: blur(6px);
     }
 
-    /* Envelope container:
-       - overflow hidden when closed (keeps the letter inside)
-       - overflow visible when open (letter can pop out)
-    */
-    .envelope-area{ display:grid; place-items:center; margin-top: 6px; }
+    .envelope-area{ display:grid; place-items:center; }
 
+    /* Envelope: CLOSED shows only envelope.
+       The letter is hidden until open. */
     .envelope{
       width: min(420px, 92%);
-      height: 280px;               /* a bit taller = less overlap */
+      height: 280px;
       position:relative;
       cursor:pointer;
       user-select:none;
-      overflow:hidden;             /* IMPORTANT: prevents overlap */
       transform: translateY(0);
       transition: transform .18s ease;
     }
-    .envelope.open{ overflow:visible; } /* allow pop-out */
     .envelope:hover{ transform: translateY(-2px); }
 
-    /* Envelope base */
-    .env-body{
-      position:absolute; inset: 80px 0 0 0; /* moved down slightly */
-      background: #fff;
+    /* base pocket */
+    .pocket{
+      position:absolute;
+      left:0; right:0;
+      bottom:0;
+      height: 190px;
+      background: #ffffff;
       border-radius: 14px;
       border: 1px solid rgba(0,0,0,.08);
       box-shadow: 0 16px 40px rgba(0,0,0,.12);
       overflow:hidden;
-      z-index: 1;
+      z-index: 2;
     }
 
-    .fold-left, .fold-right{
-      position:absolute; top: 80px; bottom: 0;
-      width: 50%;
+    /* pocket folds */
+    .pocket:before,
+    .pocket:after{
+      content:"";
+      position:absolute;
+      top:0; bottom:0;
+      width: 52%;
       background: linear-gradient(135deg, #fff, #fff5f7);
       border: 1px solid rgba(0,0,0,.06);
-      z-index: 2;
       pointer-events:none;
     }
-    .fold-left{
-      left:0;
+    .pocket:before{
+      left:-6px;
       transform: skewX(12deg);
-      transform-origin: left;
-      border-right: none;
+      transform-origin:left;
+      border-right:none;
     }
-    .fold-right{
-      right:0;
+    .pocket:after{
+      right:-6px;
       transform: skewX(-12deg);
-      transform-origin: right;
-      border-left: none;
+      transform-origin:right;
+      border-left:none;
     }
 
     /* flap */
     .flap{
-      position:absolute; left:0; right:0; top:80px;
+      position:absolute;
+      left:0; right:0;
+      bottom: 150px;
       height: 170px;
       background: linear-gradient(180deg, #fff, #ffe6ed);
       clip-path: polygon(0 0, 100% 0, 50% 78%);
       border: 1px solid rgba(0,0,0,.06);
       border-bottom:none;
-      transform-origin: 50% 0%;
+      transform-origin: 50% 100%;
       transform: rotateX(0deg);
-      transition: transform .45s ease;
-      z-index: 5;
-      pointer-events:none;
-    }
-
-    /* letter inside */
-    .letter{
-      position:absolute;
-      left: 18px; right: 18px;
-      top: 112px;                  /* moved down */
-      height: 160px;               /* slightly shorter */
-      background: #fff;
-      border-radius: 12px;
-      border: 1px solid rgba(0,0,0,.08);
-      box-shadow: 0 10px 25px rgba(0,0,0,.08);
-      padding: 18px 16px;
-      display:grid;
-      gap:10px;
-      place-content:center;
-      text-align:center;
-
-      /* CLOSED state: keep it inside the envelope */
-      transform: translateY(58px);
-      transition: transform .45s ease;
+      transition: transform .55s ease;
       z-index: 4;
+      pointer-events:none;
     }
 
     .seal{
       position:absolute;
-      top: 170px;
-      left: 50%;
+      left:50%;
+      bottom: 122px;
       transform: translateX(-50%);
-      width: 54px; height: 54px;
+      width: 56px; height: 56px;
       border-radius: 50%;
       background: radial-gradient(circle at 30% 30%, #ff99ad, var(--pink));
       box-shadow: 0 12px 25px rgba(0,0,0,.18);
@@ -155,83 +134,29 @@
       place-items:center;
       color:white;
       font-size: 22px;
-      z-index: 6;
+      z-index: 5;
       pointer-events:none;
     }
 
-    .q{
-      font-size: 28px;
-      font-weight: 850;
-      letter-spacing:-0.03em;
-      color: var(--ink);
-      margin:0;
-    }
-    .sub{
-      margin:0;
-      color: rgba(0,0,0,.65);
-      font-weight: 600;
-    }
-
-    .btn-row{
-      margin-top: 8px;
-      position:relative;
-      height: 64px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap: 14px;
-    }
-    button{
-      border:0;
-      cursor:pointer;
-      padding: 12px 18px;
-      border-radius: 999px;
-      font-weight: 800;
-      font-size: 16px;
-      box-shadow: 0 12px 28px rgba(0,0,0,.12);
-      transition: transform .12s ease, opacity .12s ease;
-      user-select:none;
-      position: relative;
-      z-index: 2;
-    }
-    button:active{ transform: scale(.98); }
-
-    #yesBtn{
-      background: linear-gradient(135deg, var(--pink), #ff8fa3);
-      color: #fff;
-    }
-    #noBtn{
-      background: #1f1f1f;
-      color: #fff;
-    }
-
-    .hint{
+    /* LETTER: hidden by default */
+    .letter{
+      position:absolute;
+      left: 18px; right: 18px;
+      bottom: 24px;
+      height: 210px;
+      background: #fff;
+      border-radius: 12px;
+      border: 1px solid rgba(0,0,0,.08);
+      box-shadow: 0 10px 25px rgba(0,0,0,.10);
+      padding: 18px 16px;
+      display:grid;
+      gap:10px;
+      place-content:center;
       text-align:center;
-      font-size: 12px;
-      opacity:.65;
-      margin-top: 12px;
-    }
-    .tap{
-      text-align:center;
-      font-size: 13px;
-      opacity:.7;
-      margin-top: 10px;
-    }
 
-    /* Open state */
-    .open .flap{ transform: rotateX(165deg); }
-    .open .letter{ transform: translateY(-26px); } /* letter pops out */
-  </style>
-</head>
-<body>
-  <div class="wrap">
-    <div class="title">A small interactive Valentine surprise 💌</div>
+      /* ✅ hidden until open */
+      opacity: 0;
+      transform: translateY(26px);
+      pointer-events:none;
 
-    <div class="card">
-      <div class="envelope-area">
-        <div class="envelope" id="envelope" aria-label="Open envelope">
-          <div class="flap"></div>
-          <div class="seal">❤</div>
-
-          <div cl
-
+      transition: opacity .25s ease, transform
