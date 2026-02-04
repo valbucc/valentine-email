@@ -159,4 +159,157 @@
       transform: translateY(26px);
       pointer-events:none;
 
-      transition: opacity .25s ease, transform
+      transition: opacity .25s ease, transform .55s ease;
+      z-index: 3;
+    }
+
+    .q{
+      font-size: 28px;
+      font-weight: 850;
+      letter-spacing:-0.03em;
+      color: var(--ink);
+      margin:0;
+    }
+    .sub{
+      margin:0;
+      color: rgba(0,0,0,.65);
+      font-weight: 600;
+    }
+
+    .btn-row{
+      margin-top: 8px;
+      position:relative;
+      height: 64px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap: 14px;
+    }
+    button{
+      border:0;
+      cursor:pointer;
+      padding: 12px 18px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 16px;
+      box-shadow: 0 12px 28px rgba(0,0,0,.12);
+      transition: transform .12s ease, opacity .12s ease;
+      user-select:none;
+      position: relative;
+      z-index: 2;
+    }
+    button:active{ transform: scale(.98); }
+
+    #yesBtn{
+      background: linear-gradient(135deg, var(--pink), #ff8fa3);
+      color: #fff;
+    }
+    #noBtn{
+      background: #1f1f1f;
+      color: #fff;
+    }
+
+    .hint{
+      text-align:center;
+      font-size: 12px;
+      opacity:.65;
+      margin-top: 12px;
+    }
+    .tap{
+      text-align:center;
+      font-size: 13px;
+      opacity:.7;
+      margin-top: 10px;
+    }
+
+    /* OPEN STATE:
+       - flap opens
+       - letter appears and slides up
+    */
+    .open .flap{ transform: rotateX(170deg); }
+    .open .letter{
+      opacity: 1;
+      transform: translateY(-55px);
+      pointer-events:auto;
+    }
+
+    /* Make sure the letter never "spills" before open */
+    .clip{
+      overflow:hidden;
+      border-radius: 16px;
+    }
+    .open.clip{ overflow:visible; }
+
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="title">A small interactive Valentine surprise 💌</div>
+
+    <div class="card">
+      <div class="envelope-area">
+        <div class="envelope clip" id="envelope" aria-label="Open envelope">
+          <div class="letter" id="letter">
+            <p class="q">Will you be my Valentine?</p>
+            <p class="sub">Choose wisely 😌</p>
+
+            <div class="btn-row" id="btnRow">
+              <button id="yesBtn" type="button">Yes 💘</button>
+              <button id="noBtn" type="button">No 🙅‍♂️</button>
+            </div>
+          </div>
+
+          <div class="flap"></div>
+          <div class="seal">❤</div>
+          <div class="pocket"></div>
+        </div>
+
+        <div class="tap">Click the envelope to open it.</div>
+        <div class="hint">Tip: after opening, the “No” button doesn’t like being clicked.</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const envelope = document.getElementById('envelope');
+    const noBtn = document.getElementById('noBtn');
+    const yesBtn = document.getElementById('yesBtn');
+    const btnRow = document.getElementById('btnRow');
+
+    // Open on click (anywhere on envelope except buttons)
+    envelope.addEventListener('click', (e) => {
+      if (e.target.tagName.toLowerCase() === 'button') return;
+      envelope.classList.toggle('open');
+      envelope.classList.toggle('clip'); // closed=clipped, open=visible
+    });
+
+    function moveNoButton(){
+      const rowRect = btnRow.getBoundingClientRect();
+      const btnRect = noBtn.getBoundingClientRect();
+      const maxX = Math.max(0, rowRect.width - btnRect.width);
+
+      const x = Math.random() * maxX;
+      const y = (Math.random() * 18) - 9;
+
+      noBtn.style.position = 'absolute';
+      noBtn.style.left = `${x}px`;
+      noBtn.style.top  = `${y}px`;
+    }
+
+    // Only start "No runs away" AFTER envelope is open
+    function noEscapeHandler(ev){
+      if (!envelope.classList.contains('open')) return;
+      ev.preventDefault();
+      moveNoButton();
+    }
+
+    ['mouseenter','mouseover','pointerenter','focus','touchstart','click'].forEach(evt => {
+      noBtn.addEventListener(evt, noEscapeHandler, {passive:false});
+    });
+
+    yesBtn.addEventListener('click', () => {
+      window.location.href = './yes.html';
+    });
+  </script>
+</body>
+</html>
