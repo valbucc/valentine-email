@@ -126,20 +126,28 @@
 
 
     .seal{
-      position:absolute;
-      left:50%;
-      bottom: 122px;
-      transform: translateX(-50%);
-      width: 56px; height: 56px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 30% 30%, #ff99ad, var(--pink));
-      box-shadow: 0 12px 25px rgba(0,0,0,.18);
-      display:grid;
-      place-items:center;
-      color:white;
-      font-size: 22px;
-      z-index: 5;
-      pointer-events:none;
+  position:absolute;
+  left:50%;
+  bottom: 122px;
+  transform: translateX(-50%);
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #ff99ad, var(--pink));
+  box-shadow: 0 12px 25px rgba(0,0,0,.18);
+  display:grid;
+  place-items:center;
+  color:white;
+  font-size: 22px;
+  z-index: 6;
+  pointer-events:none;
+
+  /* ✅ animazione fluida */
+  transition: transform .55s ease, opacity .25s ease;
+}
+
+    .open .seal{
+      transform: translateX(-50%) translateY(-110px) scale(0.85) rotate(-12deg);
+      opacity: 0.95;
     }
 
     /* LETTER: hidden by default */
@@ -209,9 +217,15 @@
       color: #fff;
     }
     #noBtn{
-      background: #1f1f1f;
-      color: #fff;
-    }
+  background: #1f1f1f;
+  color: #fff;
+
+  /* 🔥 PIÙ GRANDE DI YES */
+  padding: 16px 32px;   /* prima era più piccolo */
+  font-size: 19px;      /* testo più grande */
+  font-weight: 900;
+}
+
 
     .hint{
       text-align:center;
@@ -321,4 +335,5 @@
   </script>
 </body>
 </html>
+
 
