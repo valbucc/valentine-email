@@ -105,21 +105,25 @@
     }
 
     /* flap */
-    .flap{
-      position:absolute;
-      left:0; right:0;
-      bottom: 150px;
-      height: 170px;
-      background: linear-gradient(180deg, #fff, #ffe6ed);
-      clip-path: polygon(0 0, 100% 0, 50% 78%);
-      border: 1px solid rgba(0,0,0,.06);
-      border-bottom:none;
-      transform-origin: 50% 100%;
-      transform: rotateX(0deg);
-      transition: transform .55s ease;
-      z-index: 4;
-      pointer-events:none;
-    }
+   .flap{
+  position:absolute;
+  left:0; right:0;
+  bottom: 150px;
+  height: 170px;
+  background: linear-gradient(180deg, #fff, #ffe6ed);
+  clip-path: polygon(0 0, 100% 0, 50% 78%);
+  border: 1px solid rgba(0,0,0,.06);
+  border-bottom:none;
+
+  /* ✅ invece di rotateX, facciamo un movimento “safe” */
+  transform: translateY(0) rotate(0deg);
+  transform-origin: 50% 100%;
+  transition: transform .55s ease, opacity .25s ease;
+
+  z-index: 4;
+  pointer-events:none;
+}
+
 
     .seal{
       position:absolute;
@@ -226,7 +230,11 @@
        - flap opens
        - letter appears and slides up
     */
-    .open .flap{ transform: rotateX(170deg); }
+    .open .flap{
+      transform: translateY(-140px) rotate(180deg);
+      opacity: 0; /* ✅ sparisce quando aperta */
+    }
+
     .open .letter{
       opacity: 1;
       transform: translateY(-55px);
@@ -313,3 +321,4 @@
   </script>
 </body>
 </html>
+
